@@ -1,7 +1,6 @@
 import argparse
 import textwrap
 import pyperclip
-from pyperclip.exceptions import PyperclipException
 
 cs_lower = 'abcdefgehijklmnopqrstuvwxyz'
 cs_upper = 'ABCDEFGEHIJKLMNOPQRSTUVWXYZ'
@@ -36,7 +35,8 @@ charsets = {
 }
 
 
-def generate(pattern, ordered):
+def generate(pattern):
+    ordered = 'o' in pattern
     return pattern
 
 
@@ -56,21 +56,22 @@ def run():
               a - alphabetic
               A - alphanumeric
               h - hexadecimal
+              H - upper case hexadecimal
               b - binary
               + - alphanumeric or basic special
               # - any character
               ? - make previous character class optional
               {3} - repeat previous character class 3 times
               {3-5} - repeat previous character class 3 to 5 times
+              o - preserve pattern order
         ''')
     )
     parser.add_argument('-c', '--copy', action='store_true', help='copy password to clipboard and don\'t display')
-    parser.add_argument('-o', '--ordered', action='store_true', help='preserve pattern order')
-    parser.add_argument('-p', '--pattern', nargs=1, default='+{10-12}', help='pattern to generate password from')
+    parser.add_argument('-p', '--pattern', type=str, default='+{10-12}', help='pattern to generate password from')
 
     args = parser.parse_args()
 
-    password = generate(args.pattern[0], args.ordered)
+    password = generate(args.pattern)
 
     if args.copy:
         pyperclip.copy(password)
