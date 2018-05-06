@@ -14,7 +14,7 @@ user:~/pwg $ pip install -r requirements.txt
 
 ## Usage
 
-To create a password using the default pattern (10-12 characters), run:
+To create a password using the default pattern (12-14 characters), run:
 
 ```console
 user:~ $ pwg
@@ -26,6 +26,13 @@ This prints the generated password to std out. To copy the password to the clipb
 ```console
 user:~ $ pwg -c
 Password copied to clipboard.
+```
+
+To choose a password type from the set of predefined types, use the `-t`/`--type` option:
+
+```console
+user:~ $ pwg -t pin
+0148
 ```
 
 To specify another pattern, use the `-p`/`--pattern` option:
@@ -65,10 +72,21 @@ Character classes can be repeated by indicating the number of repetitions in bra
 four-digit number). If a range is specified, a random number of repetitions within the range is used (e.g., `A{6-10}` yields a 
 sequence of alphanumeric characters of length between six and ten). A character class can be marked as optional by adding `?`
 to the pattern (e.g., `l{10}n?` generates either ten lower case letters, or ten lower case letters and a numeral). The default 
-pattern is `c{10-12}`.
+pattern is `c{12-14}`.
 
 ### Ordered patterns
 
 By default, password characters are shuffled, so the pattern `u{2}n{5}` will generate a password containing two upper case 
 letters and five numerals in any order. To preserve the order of character classes in the pattern, add `o` to the start of the 
 pattern: `ou{2}n{5}` results in two upper case letters followed by five numerals.
+
+## Types
+
+Predefined types are stored in `types.txt`. These types are:
+
+ - default (`c{12-14}` - e.g., `3KFZ&o.Gj-XOj`)
+ - basic (`A{10-12}` - e.g., `6H69eImQPX`)
+ - long (`c{18-20}` - e.g., `2=uHb_^i,6I*=E&30hH`)
+ - secure (`lunsxC{15}` - e.g., `1a#Y[9&£#fAZ<N<U3e6$`)
+ - pin (`n{4}` - e.g., `4406`)
+ - colour (`h{6}` - e.g., `03be72`)

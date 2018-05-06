@@ -2,7 +2,8 @@ import textwrap
 import pyperclip
 import argparse
 
-from generator.generator import generate
+from generator.generator import generate, generate_from_type
+from generator.types import IllegalTypeException
 
 
 def run():
@@ -39,16 +40,27 @@ def run():
     )
     parser.add_argument(
         '-p', '--pattern',
-        type=str, default="c{10-12}",
+        type=str, default=None,
         help="pattern to generate password from"
+    )
+    parser.add_argument(
+        '-t', '--type',
+        type=str, default="default",
+        help="named type of password to generate"
     )
 
     args = parser.parse_args()
 
-    password = generate(args.pattern)
+    try:
+        if args.pattern:
+            password = generate(args.pattern)
+        else:
+            password = generate_from_type(args.type)
 
-    if args.copy:
-        pyperclip.copy(password)
-        print("Password copied to clipboard.")
-    else:
-        print(password)
+        if args.copy:
+            pyperclip.copy(password)
+            print("Password copied to clipboard.")
+        else:
+            print(password)
+    except IllegalTypeException as e:
+        print(e.message)

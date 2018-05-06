@@ -1,6 +1,8 @@
 import re
 import random
 
+from generator.types import get_type_pattern
+
 cs_lower = 'abcdefgehijklmnopqrstuvwxyz'
 cs_upper = 'ABCDEFGEHIJKLMNOPQRSTUVWXYZ'
 cs_num = '0123456789'
@@ -91,3 +93,8 @@ def generate(pattern):
     if not ordered:
         password = _shuffle_chars(password)
     return password
+
+
+def generate_from_type(type_name):
+    pattern = get_type_pattern(type_name)
+    return generate(pattern)
