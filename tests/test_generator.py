@@ -6,7 +6,7 @@ from generator.generator import generate, IllegalPatternException
 class GeneratorTest(unittest.TestCase):
 
     def testBasic(self):
-        pattern = "lunNsxSaAhHb+#"
+        pattern = "lunNsxSaAhHbcC"
         password = generate(pattern)
         self.assertEqual(len(password), 14)
 

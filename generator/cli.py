@@ -24,12 +24,12 @@ def run():
               h - hexadecimal
               H - upper case hexadecimal
               b - binary
-              + - alphanumeric or basic special
-              # - any character
+              c - alphanumeric or basic special character
+              C - any character
               ? - make previous character class optional
               {3} - repeat previous character class 3 times
               {3-5} - repeat previous character class 3 to 5 times
-              o - preserve pattern order
+              o - (at start of pattern) preserve pattern order
         """)
     )
     parser.add_argument(
@@ -39,7 +39,7 @@ def run():
     )
     parser.add_argument(
         '-p', '--pattern',
-        type=str, default="+{10-12}",
+        type=str, default="c{10-12}",
         help="pattern to generate password from"
     )
 

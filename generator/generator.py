@@ -29,8 +29,8 @@ char_classes = {
     'h': cs_hex,
     'H': cs_upper_hex,
     'b': cs_bin,
-    '+': cs_basic,
-    '#': cs_ext
+    'c': cs_basic,
+    'C': cs_ext
 }
 
 
