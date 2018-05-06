@@ -9,7 +9,7 @@ A CLI for generating randomised passwords.
 Download the repository, add `pwg` to your path, and install dependencies using:
 
 ```console
-user:~$ pip install -r requirements.txt
+user:~/pwg $ pip install -r requirements.txt
 ```
 
 ## Usage
@@ -17,21 +17,21 @@ user:~$ pip install -r requirements.txt
 To create a password using the default pattern (10-12 characters), run:
 
 ```console
-user:~$ pwg
+user:~ $ pwg
 -R@@u8U#;o
 ```
 
 This prints the generated password to std out. To copy the password to the clipboard instead, use the `-c`/`--copy` option:
 
 ```console
-user:~$ pwg -c
+user:~ $ pwg -c
 Password copied to clipboard.
 ```
 
 To specify another pattern, use the `-p`/`--pattern` option:
 
 ```console
-user:~$ pwg -p ou{2}n{5}
+user:~ $ pwg -p ou{2}n{5}
 PI73081
 ```
 
@@ -44,18 +44,18 @@ to generate a password.
 
 The available character classes are:
 
- - `l`: lower case (a-z)
- - `u`: upper case (A-Z)
- - `n`: numeral (0-9)
- - `N`: numeral without 0 (1-9)
- - `s`: basic special (!$%^&*@#;:?+=_-,.)
- - `x`: extended special ("£()[]{}~'/\<>`|)
- - `S`: any special (!$%^&*@#;:?+=_-,."£()[]{}~'/\<>`|)
- - `a`: alphabetic (a-zA-Z)
- - `A`: alphanumeric (a-zA-Z0-9)
- - `h`: hexadecimal (0-9a-f)
- - `H`: upper case hexadecimal (0-9A-F)
- - `b`: binary (01)
+ - `l`: lower case (`a-z`)
+ - `u`: upper case (`A-Z`)
+ - `n`: numeral (`0-9`)
+ - `N`: numeral without 0 (`1-9`)
+ - `s`: basic special (`!$%^&*@#;:?+=_-,.`)
+ - `x`: extended special (``"£()[]{}~'/\<>`|``)
+ - `S`: any special (``!$%^&*@#;:?+=_-,."£()[]{}~'/\<>`|``)
+ - `a`: alphabetic (`a-zA-Z`)
+ - `A`: alphanumeric (`a-zA-Z0-9`)
+ - `h`: hexadecimal (`0-9a-f`)
+ - `H`: upper case hexadecimal (`0-9A-F`)
+ - `b`: binary (`01`)
  - `c`: alphanumeric or basic special character
  - `C`: any character
  
@@ -71,4 +71,4 @@ pattern is `c{10-12}`.
 
 By default, password characters are shuffled, so the pattern `u{2}n{5}` will generate a password containing two upper case 
 letters and five numerals in any order. To preserve the order of character classes in the pattern, add `o` to the start of the 
-pattern: `ou{2}{5}`
+pattern: `ou{2}n{5}` results in two upper case letters followed by five numerals.
