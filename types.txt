@@ -1,6 +1,0 @@
-default c{12-14}
-basic   A{10-12}
-long    c{18-20}
-secure  lunsxC{15}
-pin     n{4}
-colour  h{6}

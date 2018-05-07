@@ -2,6 +2,7 @@ import textwrap
 import pyperclip
 import argparse
 
+from generator.config import load_config
 from generator.generator import generate, generate_from_type, generate_pronounceable
 
 
@@ -54,14 +55,15 @@ def run():
     )
 
     args = parser.parse_args()
+    config = load_config()
 
     try:
         if args.pattern:
-            password = generate(args.pattern)
+            password = generate(config, args.pattern)
         elif args.type == "pronounceable":
-            password = generate_pronounceable(args.length)
+            password = generate_pronounceable(config, args.length)
         else:
-            password = generate_from_type(args.type)
+            password = generate_from_type(config, args.type)
 
         if args.copy:
             pyperclip.copy(password)

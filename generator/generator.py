@@ -4,8 +4,6 @@ import os
 import random
 import re
 
-from generator.types import get_type_pattern
-
 data_path = "../data"
 
 cs_lower = 'abcdefgehijklmnopqrstuvwxyz'
@@ -41,12 +39,6 @@ char_classes = {
 }
 
 
-class IllegalPatternException(Exception):
-
-    def __init__(self, message):
-        self.message = "Illegal pattern: " + message
-
-
 def _generate_char(c):
     if c in char_classes:
         char_class = char_classes[c]
@@ -75,7 +67,7 @@ def _match_descriptor(pattern):
             if len(matches) > 1:
                 max_length = int(matches[1])
                 if max_length < min_length:
-                    raise IllegalPatternException("Max range less than min range")
+                    raise ValueError("Max range less than min range")
             else:
                 max_length = min_length
     char_class = descriptor[0]
@@ -121,7 +113,7 @@ def _load_ngrams(file_name):
     return d
 
 
-def generate_pronounceable(length):
+def generate_pronounceable(config, length):
     if length < 4:
         raise ValueError("Pronounceable passwords must be at least four characters long.")
     s = _weighted_random(_load_ngrams('ngrams1_start.csv'))
@@ -134,16 +126,17 @@ def generate_pronounceable(length):
     return s
 
 
-def generate(pattern):
+def generate(config, pattern):
+    pattern = pattern.strip()
     ordered = False
-    if pattern[0] == 'o':
+    if pattern[0].lower() == 'o':
         ordered = True
         pattern = pattern[1:]
     password = ''
     while pattern:
         char_class, min_length, max_length, pattern = _match_descriptor(pattern)
         if char_class not in char_classes:
-            raise IllegalPatternException("Illegal character class '" + char_class + "'")
+            raise ValueError("Illegal character class '{}'".format(char_class))
         n = random.randint(min_length, max_length)
         for i in range(n):
             password += _generate_char(char_class)
@@ -152,6 +145,9 @@ def generate(pattern):
     return password
 
 
-def generate_from_type(type_name):
-    pattern = get_type_pattern(type_name)
-    return generate(pattern)
+def generate_from_type(config, type_name):
+    try:
+        pattern = config.types[type_name]
+        return generate(config, pattern)
+    except KeyError:
+        raise ValueError("No type named {} defined.".format(type_name))
