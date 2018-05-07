@@ -90,3 +90,27 @@ Predefined types are stored in `types.txt`. These types are:
  - secure (`lunsxC{15}` - e.g., `1a#Y[9&£#fAZ<N<U3e6$`)
  - pin (`n{4}` - e.g., `4406`)
  - colour (`h{6}` - e.g., `03be72`)
+
+### Pronounceable passwords
+
+In addition, `pronounceable` can be specified as a special type. This results in a (lower case) pronounceable password being 
+generated using common character n-grams from the English language. The n-grams are taken from 
+[tables created by Peter Norvig](http://norvig.com/mayzner.html). The default length of a pronounceable password is 14 
+characters, and the length can be specified using the `-l`/`--length` option. 
+
+**Warning:** While passwords generated using this feature are unlikely to be susceptible to dictionary attacks, they may be 
+significantly less secure than entirely random passwords. Use passwords of an appropriate length, and consider adding numerals, 
+special characters, or upper case letters to pronounceable passwords.
+
+```console
+user:~ $ pwg -t pronounceable -l 12
+offingundese
+```
+
+## License
+
+pwg is released under the open-source MIT license.
+
+**Disclaimer:** I am not a security expert, and I am working on this project in my free time. I cannot guarantee that passwords
+generated using this program are suitable for any particular purpose. It is the responsibility of the user to ensure that generated
+passwords are of the appropriate length and complexity.

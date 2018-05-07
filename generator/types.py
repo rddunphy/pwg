@@ -9,12 +9,6 @@ class TypeFileFormatException(Exception):
         self.message = "Invalid type file format: " + message
 
 
-class IllegalTypeException(Exception):
-
-    def __init__(self, message):
-        self.message = "Illegal type: " + message
-
-
 def load_types():
     path = os.path.join(os.path.dirname(__file__), types_path)
     types = {}
@@ -36,5 +30,5 @@ def get_type_pattern(type_name):
     type_name = type_name.lower()
     types = load_types()
     if type_name not in types:
-        raise IllegalTypeException("No type named {} defined.".format(type_name))
+        raise ValueError("No type named {} defined.".format(type_name))
     return types[type_name]

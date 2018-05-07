@@ -2,8 +2,7 @@ import textwrap
 import pyperclip
 import argparse
 
-from generator.generator import generate, generate_from_type
-from generator.types import IllegalTypeException
+from generator.generator import generate, generate_from_type, generate_pronounceable
 
 
 def run():
@@ -48,12 +47,19 @@ def run():
         type=str, default="default",
         help="named type of password to generate"
     )
+    parser.add_argument(
+        '-l', '--length',
+        type=int, default=14,
+        help="length of variable-length types"
+    )
 
     args = parser.parse_args()
 
     try:
         if args.pattern:
             password = generate(args.pattern)
+        elif args.type == "pronounceable":
+            password = generate_pronounceable(args.length)
         else:
             password = generate_from_type(args.type)
 
@@ -62,5 +68,5 @@ def run():
             print("Password copied to clipboard.")
         else:
             print(password)
-    except IllegalTypeException as e:
-        print(e.message)
+    except ValueError as e:
+        print(e)

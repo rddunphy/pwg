@@ -1,6 +1,6 @@
 import unittest
 
-from generator.generator import generate, IllegalPatternException
+from generator.generator import generate, IllegalPatternException, generate_pronounceable
 
 
 class GeneratorTest(unittest.TestCase):
@@ -56,3 +56,13 @@ class GeneratorTest(unittest.TestCase):
         pattern = "n{10-20"
         with self.assertRaises(IllegalPatternException):
             generate(pattern)
+
+    def testPronounceable(self):
+        password = generate_pronounceable(10)
+        self.assertEqual(len(password), 10)
+
+    def testPronounceableLength(self):
+        password = generate_pronounceable(4)
+        self.assertEqual(len(password), 4)
+        with self.assertRaises(ValueError):
+            generate_pronounceable(3)

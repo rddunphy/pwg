@@ -1,7 +1,12 @@
-import re
+import csv
+import numpy
+import os
 import random
+import re
 
 from generator.types import get_type_pattern
+
+data_path = "../data"
 
 cs_lower = 'abcdefgehijklmnopqrstuvwxyz'
 cs_upper = 'ABCDEFGEHIJKLMNOPQRSTUVWXYZ'
@@ -75,6 +80,58 @@ def _match_descriptor(pattern):
                 max_length = min_length
     char_class = descriptor[0]
     return char_class, min_length, max_length, pattern[len(descriptor):]
+
+
+def _choose_ngram_char(d, s):
+    start = s if len(s) == 1 else s[-2:]
+    ngrams = {}
+    for ch in cs_lower:
+        ngram = start + ch
+        if ngram in d:
+            ngrams[ngram] = d[ngram]
+        else:
+            ngrams[ngram] = 0
+    return _weighted_random(ngrams)[-1]
+
+
+def _weighted_random(d):
+    population = []
+    weights = []
+    for k, v in d.items():
+        population.append(k)
+        weights.append(v)
+    total = sum(weights)
+    if total == 0:  # This shouldn't happen
+        return random.choice(population)
+    weights = [x / total for x in weights]
+    return numpy.random.choice(population, p=weights)
+
+
+def _load_ngrams(file_name):
+    path = os.path.join(os.path.dirname(__file__), data_path)
+    path = os.path.join(path, file_name)
+    d = {}
+    with open(path, 'r') as f:
+        r = csv.reader(f)
+        for row in r:
+            try:
+                d[row[0]] = int(row[1])
+            except ValueError:
+                pass
+    return d
+
+
+def generate_pronounceable(length):
+    if length < 4:
+        raise ValueError("Pronounceable passwords must be at least four characters long.")
+    s = _weighted_random(_load_ngrams('ngrams1_start.csv'))
+    s += _choose_ngram_char(_load_ngrams('ngrams2_start.csv'), s)
+    s += _choose_ngram_char(_load_ngrams('ngrams3_start.csv'), s)
+    d = _load_ngrams('ngrams3.csv')
+    for i in range(length - 4):
+        s += _choose_ngram_char(d, s)
+    s += _choose_ngram_char(_load_ngrams('ngrams3_end.csv'), s)
+    return s
 
 
 def generate(pattern):
