@@ -34,11 +34,13 @@ def save(args, config):
         if args.pattern:
             generate(config, args.pattern)
             config.set_type(args.name, args.pattern)
+            print("Pattern '{}' saved as type '{}'.".format(args.pattern, args.name))
         else:
             if args.name not in config.types:
                 raise ValueError("No type named {}.".format(args.name))
             if confirm("Delete type with name {}?".format(args.name)):
                 config.remove_type(args.name)
+                print("Type {} deleted.".format(args.name))
         save_config(config)
     except ValueError as e:
         print(e)
@@ -47,6 +49,7 @@ def save(args, config):
 def reset(*_):
     if confirm("Reset all custom types?"):
         reset_config()
+        print("Types reset.")
 
 
 def run():

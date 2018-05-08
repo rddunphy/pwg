@@ -107,6 +107,33 @@ user:~ $ pwg -t pronounceable -l 12
 offingundese
 ```
 
+### Custom types
+
+Patterns can be saved as custom types using the `save` command.
+
+```console
+user:~ $ pwg save mypattern x{10}
+Pattern 'x{10}' saved as type 'mypattern'.
+user:~ $ pwg -t mypattern
+[}£}/(""}\
+```
+
+Saved patterns can be deleted by omitting the pattern argument:
+
+```console
+user:~ $ pwg save mypattern
+Delete type with name mypattern? (Y/n) y
+Type mypattern deleted.
+```
+
+To reset all types, use the `reset` command.
+
+```console
+user:~ $ pwg reset
+Reset all custom types? (Y/n) y
+Types reset.
+```
+
 ## License
 
 pwg is released under the open-source MIT license.
