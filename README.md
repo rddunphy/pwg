@@ -127,7 +127,7 @@ A number of predefined types are stored in a config file. These types are:
 
 ### Pronounceable passwords
 
-Pronounceable passwords are lower case passwords generated generated using common character n-grams from the English language. 
+Pronounceable passwords are lower case passwords generated using common character n-grams from the English language. 
 The n-grams are taken from [tables created by Peter Norvig](http://norvig.com/mayzner.html), and can be found in the `data` 
 directory.
 
