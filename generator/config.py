@@ -16,9 +16,24 @@ class Config:
             "colour":   "h{6}"
         }
 
+    def set_type(self, name, pattern):
+        self.types[name] = pattern
+
+    def remove_type(self, name):
+        if name == "default":
+            self.types[name] = "c{12-14}"
+        else:
+            del self.types[name]
+
 
 def _config_path():
     return os.path.join(os.path.dirname(__file__), config_path)
+
+
+def reset_config():
+    config = Config()
+    save_config(config)
+    return config
 
 
 def save_config(config):
@@ -31,6 +46,4 @@ def load_config():
     if os.path.isfile(path):
         with open(_config_path(), 'rb') as f:
             return pickle.load(f)
-    config = Config()
-    save_config(config)
-    return config
+    return reset_config()

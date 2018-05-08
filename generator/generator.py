@@ -113,7 +113,7 @@ def _load_ngrams(file_name):
     return d
 
 
-def generate_pronounceable(config, length):
+def generate_pronounceable(length):
     if length < 4:
         raise ValueError("Pronounceable passwords must be at least four characters long.")
     s = _weighted_random(_load_ngrams('ngrams1_start.csv'))
@@ -136,7 +136,7 @@ def generate(config, pattern):
     while pattern:
         char_class, min_length, max_length, pattern = _match_descriptor(pattern)
         if char_class not in char_classes:
-            raise ValueError("Illegal character class '{}'".format(char_class))
+            raise ValueError("Illegal character class '{}'.".format(char_class))
         n = random.randint(min_length, max_length)
         for i in range(n):
             password += _generate_char(char_class)

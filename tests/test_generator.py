@@ -59,11 +59,11 @@ class GeneratorTest(unittest.TestCase):
             generate(Config(), pattern)
 
     def testPronounceable(self):
-        password = generate_pronounceable(Config(), 10)
+        password = generate_pronounceable(10)
         self.assertEqual(len(password), 10)
 
     def testPronounceableLength(self):
-        password = generate_pronounceable(Config(), 4)
+        password = generate_pronounceable(4)
         self.assertEqual(len(password), 4)
         with self.assertRaises(ValueError):
-            generate_pronounceable(Config(), 3)
+            generate_pronounceable(3)

@@ -2,8 +2,51 @@ import textwrap
 import pyperclip
 import argparse
 
-from generator.config import load_config
+from generator.config import load_config, save_config, reset_config
 from generator.generator import generate, generate_from_type, generate_pronounceable
+
+
+def confirm(message):
+    inp = input(message + " (Y/n) ")
+    inp = inp.strip()
+    return inp != 'n' and inp != 'N'
+
+
+def gen(args, config):
+    try:
+        if args.pattern:
+            password = generate(config, args.pattern)
+        elif args.type == "pronounceable":
+            password = generate_pronounceable(args.length)
+        else:
+            password = generate_from_type(config, args.type)
+        if args.copy:
+            pyperclip.copy(password)
+            print("Password copied to clipboard.")
+        else:
+            print(password)
+    except ValueError as e:
+        print(e)
+
+
+def save(args, config):
+    try:
+        if args.pattern:
+            generate(config, args.pattern)
+            config.set_type(args.name, args.pattern)
+        else:
+            if args.name not in config.types:
+                raise ValueError("No type named {}.".format(args.name))
+            if confirm("Delete type with name {}?".format(args.name)):
+                config.remove_type(args.name)
+        save_config(config)
+    except ValueError as e:
+        print(e)
+
+
+def reset(*_):
+    if confirm("Reset all custom types?"):
+        reset_config()
 
 
 def run():
@@ -33,17 +76,18 @@ def run():
               o - (at start of pattern) preserve pattern order
         """)
     )
+    group = parser.add_mutually_exclusive_group()
     parser.add_argument(
         '-c', '--copy',
         action='store_true',
         help="copy password to clipboard and don\'t display"
     )
-    parser.add_argument(
+    group.add_argument(
         '-p', '--pattern',
         type=str, default=None,
         help="pattern to generate password from"
     )
-    parser.add_argument(
+    group.add_argument(
         '-t', '--type',
         type=str, default="default",
         help="named type of password to generate"
@@ -53,22 +97,30 @@ def run():
         type=int, default=14,
         help="length of variable-length types"
     )
+    parser.set_defaults(func=gen)
+
+    subparsers = parser.add_subparsers()
+
+    save_parser = subparsers.add_parser(
+        'save', help="save a pattern as a type",
+        description="Save a pattern for later use."
+    )
+    save_parser.add_argument(
+        'name', type=str,
+        help="name of the type to save"
+    )
+    save_parser.add_argument(
+        'pattern', type=str, nargs='?',
+        help="pattern to save"
+    )
+    save_parser.set_defaults(func=save)
+
+    reset_parser = subparsers.add_parser(
+        'reset', help="reset default types",
+        description="Reset default types."
+    )
+    reset_parser.set_defaults(func=reset)
 
     args = parser.parse_args()
     config = load_config()
-
-    try:
-        if args.pattern:
-            password = generate(config, args.pattern)
-        elif args.type == "pronounceable":
-            password = generate_pronounceable(config, args.length)
-        else:
-            password = generate_from_type(config, args.type)
-
-        if args.copy:
-            pyperclip.copy(password)
-            print("Password copied to clipboard.")
-        else:
-            print(password)
-    except ValueError as e:
-        print(e)
+    args.func(args, config)
