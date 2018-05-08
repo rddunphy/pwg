@@ -60,9 +60,9 @@ def remove_chars(args):
 
 
 def reset(_):
-    if confirm("Reset all custom types?"):
+    if confirm("Reset all custom types and character classes?"):
         reset_config()
-        print("Types reset.")
+        print("Configuration reset.")
 
 
 def munge(args):
