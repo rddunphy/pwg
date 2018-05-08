@@ -5,45 +5,45 @@ import random
 import re
 
 data_path = "../data"
+#
+# cs_lower = 'abcdefgehijklmnopqrstuvwxyz'
+# cs_upper = 'ABCDEFGEHIJKLMNOPQRSTUVWXYZ'
+# cs_num = '0123456789'
+# cs_non_zero = '123456789'
+# cs_special = '!$%^&*@#;:?+=_-,.'
+# cs_ext_special = '"£()[]{}~\'/\\<>`|'
+# cs_all_special = cs_special + cs_ext_special
+# cs_alpha = cs_lower + cs_upper
+# cs_alphanumeric = cs_alpha + cs_num
+# cs_hex = cs_num + 'abcdef'
+# cs_upper_hex = cs_num + 'ABCDEF'
+# cs_bin = '01'
+# cs_basic = cs_alphanumeric + cs_special
+# cs_ext = cs_basic + cs_ext_special
+#
+# char_classes = {
+#     'l': cs_lower,
+#     'u': cs_upper,
+#     'n': cs_num,
+#     'N': cs_non_zero,
+#     's': cs_special,
+#     'x': cs_ext_special,
+#     'S': cs_all_special,
+#     'a': cs_alpha,
+#     'A': cs_alphanumeric,
+#     'h': cs_hex,
+#     'H': cs_upper_hex,
+#     'b': cs_bin,
+#     'c': cs_basic,
+#     'C': cs_ext
+# }
 
-cs_lower = 'abcdefgehijklmnopqrstuvwxyz'
-cs_upper = 'ABCDEFGEHIJKLMNOPQRSTUVWXYZ'
-cs_num = '0123456789'
-cs_non_zero = '123456789'
-cs_special = '!$%^&*@#;:?+=_-,.'
-cs_ext_special = '"£()[]{}~\'/\\<>`|'
-cs_all_special = cs_special + cs_ext_special
-cs_alpha = cs_lower + cs_upper
-cs_alphanumeric = cs_alpha + cs_num
-cs_hex = cs_num + 'abcdef'
-cs_upper_hex = cs_num + 'ABCDEF'
-cs_bin = '01'
-cs_basic = cs_alphanumeric + cs_special
-cs_ext = cs_basic + cs_ext_special
 
-char_classes = {
-    'l': cs_lower,
-    'u': cs_upper,
-    'n': cs_num,
-    'N': cs_non_zero,
-    's': cs_special,
-    'x': cs_ext_special,
-    'S': cs_all_special,
-    'a': cs_alpha,
-    'A': cs_alphanumeric,
-    'h': cs_hex,
-    'H': cs_upper_hex,
-    'b': cs_bin,
-    'c': cs_basic,
-    'C': cs_ext
-}
-
-
-def _generate_char(c):
-    if c in char_classes:
-        char_class = char_classes[c]
-        return char_class[random.randrange(len(char_class))]
-    return ''
+def _generate_char(ch, config):
+    char_class = config.char_class(ch)
+    if not char_class:
+        raise ValueError("Illegal character class '{}'.".format(ch))
+    return random.choice(char_class)
 
 
 def _shuffle_chars(s):
@@ -77,7 +77,7 @@ def _match_descriptor(pattern):
 def _choose_ngram_char(d, s):
     start = s if len(s) == 1 else s[-2:]
     ngrams = {}
-    for ch in cs_lower:
+    for ch in "abcdefghijklmnopqrstuvwxyz":
         ngram = start + ch
         if ngram in d:
             ngrams[ngram] = d[ngram]
@@ -135,11 +135,9 @@ def generate(config, pattern):
     password = ''
     while pattern:
         char_class, min_length, max_length, pattern = _match_descriptor(pattern)
-        if char_class not in char_classes:
-            raise ValueError("Illegal character class '{}'.".format(char_class))
         n = random.randint(min_length, max_length)
         for i in range(n):
-            password += _generate_char(char_class)
+            password += _generate_char(char_class, config)
     if not ordered:
         password = _shuffle_chars(password)
     return password

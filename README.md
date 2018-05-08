@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.com/rddunphy/pwg.svg?branch=master)](https://travis-ci.com/rddunphy/pwg)
 
-A CLI for generating randomised passwords.
+pwg is a customisable command line tool for generating various types of randomised passwords, including pronounceable passwords.
 
 ## Installation
 
@@ -40,6 +40,20 @@ To specify another pattern, use the `-p`/`--pattern` option:
 ```console
 user:~ $ pwg -p ou{2}n{5}
 PI73081
+```
+
+To munge a password (i.e., replace some characters with special characters, numerals, or upper case letters), use the `munge` command:
+
+```console
+user:~ $ pwg munge mypassword
+mYPaS$w0rD
+```
+
+Passwords generated using pwg can be munged using the `-m`/`--munge` option:
+
+```console
+user:~ $ pwg -m -t pronounceable
+is$3Dge6EdSOUR
 ```
 
 ## Patterns
@@ -95,17 +109,24 @@ Predefined types are stored in `types.txt`. These types are:
 
 In addition, `pronounceable` can be specified as a special type. This results in a (lower case) pronounceable password being 
 generated using common character n-grams from the English language. The n-grams are taken from 
-[tables created by Peter Norvig](http://norvig.com/mayzner.html). The default length of a pronounceable password is 14 
-characters, and the length can be specified using the `-l`/`--length` option. 
+[tables created by Peter Norvig](http://norvig.com/mayzner.html).
 
-**Warning:** While passwords generated using this feature are unlikely to be susceptible to dictionary attacks, they may be 
-significantly less secure than entirely random passwords. Use passwords of an appropriate length, and consider adding numerals, 
-special characters, or upper case letters to pronounceable passwords.
+```console
+user:~ $ pwg -t pronounceable
+explawneventry
+```
+
+The default length of a pronounceable password is 14 characters, and the length can be specified using the `-l`/`--length` 
+option:
 
 ```console
 user:~ $ pwg -t pronounceable -l 12
 offingundese
 ```
+
+**Warning:** While passwords generated using this feature are unlikely to be susceptible to dictionary attacks, they may be 
+significantly less secure than entirely random passwords. Use passwords of an appropriate length, and consider adding numerals, 
+special characters, or upper case letters to pronounceable passwords.
 
 ### Custom types
 
@@ -133,6 +154,27 @@ user:~ $ pwg reset
 Reset all custom types? (Y/n) y
 Types reset.
 ```
+
+## Customised character classes
+
+Characters can be added to or removed from character classes to improve localisation. To add characters to a class, use the 
+`add_chars` command:
+
+```console
+user:~ $ pwg add_chars l äöüß
+l: abcdefgehijklmnopqrstuvwxyzäöüß
+```
+
+To remove characters from a character set, use the `remove_chars` keyword:
+
+```console
+user:~ $ pwg remove_chars x £
+x: "()[]{}~'/\<>`|
+```
+
+These changes can be reverted using `reset`. The basic character classes that can be modified are `lunNsxhHb`. The remaining classes 
+are built from the basic classes, so that for instance adding a letter to `l` (lower case) also makes it available to `A` 
+(alphanumeric) and `C` (any character).
 
 ## License
 

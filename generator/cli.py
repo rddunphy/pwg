@@ -4,6 +4,7 @@ import argparse
 
 from generator.config import load_config, save_config, reset_config
 from generator.generator import generate, generate_from_type, generate_pronounceable
+from generator.substitutor import substitute
 
 
 def confirm(message):
@@ -12,44 +13,60 @@ def confirm(message):
     return inp != 'n' and inp != 'N'
 
 
-def gen(args, config):
-    try:
-        if args.pattern:
-            password = generate(config, args.pattern)
-        elif args.type == "pronounceable":
-            password = generate_pronounceable(args.length)
-        else:
-            password = generate_from_type(config, args.type)
-        if args.copy:
-            pyperclip.copy(password)
-            print("Password copied to clipboard.")
-        else:
-            print(password)
-    except ValueError as e:
-        print(e)
+def gen(args):
+    config = load_config()
+    if args.pattern:
+        password = generate(config, args.pattern)
+    elif args.type == "pronounceable":
+        password = generate_pronounceable(args.length)
+    else:
+        password = generate_from_type(config, args.type)
+    if args.munge:
+        password = substitute(password, config)
+    if args.copy:
+        pyperclip.copy(password)
+        print("Password copied to clipboard.")
+    else:
+        print(password)
 
 
-def save(args, config):
-    try:
-        if args.pattern:
-            generate(config, args.pattern)
-            config.set_type(args.name, args.pattern)
-            print("Pattern '{}' saved as type '{}'.".format(args.pattern, args.name))
-        else:
-            if args.name not in config.types:
-                raise ValueError("No type named {}.".format(args.name))
-            if confirm("Delete type with name {}?".format(args.name)):
-                config.remove_type(args.name)
-                print("Type {} deleted.".format(args.name))
-        save_config(config)
-    except ValueError as e:
-        print(e)
+def save(args):
+    config = load_config()
+    if args.pattern:
+        generate(config, args.pattern)
+        config.set_type(args.name, args.pattern)
+        print("Pattern '{}' saved as type '{}'.".format(args.pattern, args.name))
+    else:
+        if args.name not in config.types:
+            raise ValueError("No type named {}.".format(args.name))
+        if confirm("Delete type with name {}?".format(args.name)):
+            config.remove_type(args.name)
+            print("Type {} deleted.".format(args.name))
+    save_config(config)
 
 
-def reset(*_):
+def add_chars(args):
+    config = load_config()
+    config.add_chars_to_class(args.cls, args.chars)
+    save_config(config)
+    print("{}: {}".format(args.cls, config.char_class(args.cls)))
+
+
+def remove_chars(args):
+    config = load_config()
+    config.remove_chars_from_class(args.cls, args.chars)
+    save_config(config)
+    print("{}: {}".format(args.cls, config.char_class(args.cls)))
+
+
+def reset(_):
     if confirm("Reset all custom types?"):
         reset_config()
         print("Types reset.")
+
+
+def munge(args):
+    print(substitute(args.string, load_config()))
 
 
 def run():
@@ -100,6 +117,11 @@ def run():
         type=int, default=14,
         help="length of variable-length types"
     )
+    parser.add_argument(
+        '-m', '--munge',
+        action='store_true',
+        help="munge generated password"
+    )
     parser.set_defaults(func=gen)
 
     subparsers = parser.add_subparsers()
@@ -118,12 +140,51 @@ def run():
     )
     save_parser.set_defaults(func=save)
 
+    add_chars_parser = subparsers.add_parser(
+        'add_chars', help="add characters to a character class",
+        description="Add characters to a character class."
+    )
+    add_chars_parser.add_argument(
+        'cls', type=str,
+        help="character class to amend"
+    )
+    add_chars_parser.add_argument(
+        'chars', type=str,
+        help="characters to add to the class"
+    )
+    add_chars_parser.set_defaults(func=add_chars)
+
+    remove_chars_parser = subparsers.add_parser(
+        'remove_chars', help="remove characters from a character class",
+        description="Remove characters from a character class."
+    )
+    remove_chars_parser.add_argument(
+        'cls', type=str,
+        help="character class to amend"
+    )
+    remove_chars_parser.add_argument(
+        'chars', type=str,
+        help="characters to remove from the class"
+    )
+    remove_chars_parser.set_defaults(func=remove_chars)
+
     reset_parser = subparsers.add_parser(
         'reset', help="reset default types",
         description="Reset default types."
     )
     reset_parser.set_defaults(func=reset)
 
+    munge_parser = subparsers.add_parser(
+        'munge', help="substitute special characters",
+        description="Substitute special characters and numerals for letters and randomise case."
+    )
+    munge_parser.add_argument(
+        'string', type=str, help="password to munge"
+    )
+    munge_parser.set_defaults(func=munge)
+
     args = parser.parse_args()
-    config = load_config()
-    args.func(args, config)
+    try:
+        args.func(args)
+    except ValueError as e:
+        print(e)
