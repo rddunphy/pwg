@@ -1,34 +1,34 @@
 import unittest
 
-from generator.generator import generate, generate_pronounceable
+from generator.generator import generate, generate_pronounceable, generate_from_type
 from generator.config import Config
 
 
 class GeneratorTest(unittest.TestCase):
 
-    def testBasic(self):
+    def test_basic(self):
         pattern = "lunNsxSaAhHbcC"
         password = generate(Config(), pattern)
         self.assertEqual(len(password), 14)
 
-    def testLengthDescriptor(self):
+    def test_length_descriptor(self):
         pattern = "a{10}"
         password = generate(Config(), pattern)
         self.assertEqual(len(password), 10)
 
-    def testRangeDescriptor(self):
+    def test_range_descriptor(self):
         pattern = "h{5-6}"
         password = generate(Config(), pattern)
         self.assertGreaterEqual(len(password), 5)
         self.assertLessEqual(len(password), 6)
 
-    def testOptionalDescriptor(self):
+    def test_optional_descriptor(self):
         pattern = "nN?"
         password = generate(Config(), pattern)
         self.assertGreaterEqual(len(password), 1)
         self.assertLessEqual(len(password), 2)
 
-    def testOrdered(self):
+    def test_ordered(self):
         pattern = "onu{20}n"
         password = generate(Config(), pattern)
         self.assertEqual(len(password), 22)
@@ -38,32 +38,40 @@ class GeneratorTest(unittest.TestCase):
         except ValueError:
             self.fail("Numerals not at expected indices")
 
-    def testIllegalCharacterClass(self):
+    def test_illegal_character_class(self):
         pattern = "nay"
         with self.assertRaises(ValueError):
             generate(Config(), pattern)
 
-    def testIllegalOrderedPlacement(self):
+    def test_illegal_ordered_placement(self):
         pattern = "no"
         with self.assertRaises(ValueError):
             generate(Config(), pattern)
 
-    def testIllegalDescriptorRange(self):
+    def test_illegal_descriptor_range(self):
         pattern = "n{20-10}"
         with self.assertRaises(ValueError):
             generate(Config(), pattern)
 
-    def testDescriptorRangeSyntaxError(self):
+    def test_descriptor_range_syntax_error(self):
         pattern = "n{10-20"
         with self.assertRaises(ValueError):
             generate(Config(), pattern)
 
-    def testPronounceable(self):
+    def test_pronounceable(self):
         password = generate_pronounceable(10)
         self.assertEqual(len(password), 10)
 
-    def testPronounceableLength(self):
+    def test_pronounceable_length(self):
         password = generate_pronounceable(4)
         self.assertEqual(len(password), 4)
         with self.assertRaises(ValueError):
             generate_pronounceable(3)
+
+    def test_generate_from_type(self):
+        password = generate_from_type(Config(), 'pin')
+        try:
+            int(password)
+        except ValueError:
+            self.fail("PIN password contains non-numerals")
+        self.assertEqual(len(password), 4)
