@@ -69,7 +69,7 @@ def munge(args):
     print(substitute(args.string, load_config()))
 
 
-def run():
+def create_parser():
     parser = argparse.ArgumentParser(
         formatter_class=argparse.RawDescriptionHelpFormatter,
         description="Generate passwords.",
@@ -183,6 +183,11 @@ def run():
     )
     munge_parser.set_defaults(func=munge)
 
+    return parser
+
+
+def run():
+    parser = create_parser()
     args = parser.parse_args()
     try:
         args.func(args)
