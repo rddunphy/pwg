@@ -1,29 +1,5 @@
 import random
 
-substitutions = {
-    'a': ['@', '4'],
-    'b': ['8', '6'],
-    'c': ['(', '<'],
-    'd': ['6'],
-    'e': ['3'],
-    'f': ['#'],
-    'g': ['9'],
-    'h': ['#'],
-    'i': ['1', '!'],
-    'k': ['<', '/<'],
-    'l': ['1', '/'],
-    'n': ['^'],
-    'o': ['0', '*'],
-    'q': ['9'],
-    's': ['$', '5'],
-    't': ['+'],
-    'v': ['<', '>'],
-    'w': ['uu', '2u'],
-    'x': ['%'],
-    'y': ['?'],
-    'z': ['2']
-}
-
 
 def _toggle_case(ch):
     if ch == ch.lower():
@@ -31,7 +7,7 @@ def _toggle_case(ch):
     return ch.lower()
 
 
-def _substitute_char(ch):
+def _substitute_char(ch, substitutions):
     ch = ch.lower()
     if ch in substitutions:
         return random.choice(substitutions[ch])
@@ -49,7 +25,7 @@ def substitute(string, config):
     result = ""
     for i, ch in enumerate(string):
         if i in subst_chars:
-            result += _substitute_char(ch)
+            result += _substitute_char(ch, config.substitutions)
         elif i in caps_chars:
             result += _toggle_case(ch)
         else:

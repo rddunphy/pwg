@@ -35,6 +35,29 @@ class Config:
         }
         self.munge_subst_factor = 0.25
         self.munge_caps_factor = 0.35
+        self.substitutions = {
+            'a': ['@', '4'],
+            'b': ['8', '6'],
+            'c': ['(', '<'],
+            'd': ['6'],
+            'e': ['3'],
+            'f': ['#'],
+            'g': ['9'],
+            'h': ['#'],
+            'i': ['1', '!'],
+            'k': ['<', '/<'],
+            'l': ['1', '/'],
+            'n': ['^'],
+            'o': ['0', '*'],
+            'q': ['9'],
+            's': ['$', '5'],
+            't': ['+'],
+            'v': ['<', '>'],
+            'w': ['uu', '2u'],
+            'x': ['%'],
+            'y': ['?'],
+            'z': ['2']
+        }
 
     def set_type(self, name, pattern):
         self.types[name] = pattern
