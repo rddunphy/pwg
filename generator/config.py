@@ -1,7 +1,7 @@
 import pickle
 import os
 
-config_path = "../config.p"
+from generator.paths import config_path
 
 
 class Config:
@@ -71,10 +71,6 @@ class Config:
             raise ValueError("'{}' is not a basic character class.".format(ch))
 
 
-def _config_path():
-    return os.path.join(os.path.dirname(__file__), config_path)
-
-
 def reset_config():
     config = Config()
     save_config(config)
@@ -82,13 +78,13 @@ def reset_config():
 
 
 def save_config(config):
-    with open(_config_path(), 'wb') as f:
+    with open(config_path(), 'wb') as f:
         pickle.dump(config, f)
 
 
 def load_config():
-    path = _config_path()
+    path = config_path()
     if os.path.isfile(path):
-        with open(_config_path(), 'rb') as f:
+        with open(config_path(), 'rb') as f:
             return pickle.load(f)
     return reset_config()

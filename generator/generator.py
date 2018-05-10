@@ -4,39 +4,7 @@ import os
 import random
 import re
 
-data_path = "../data"
-#
-# cs_lower = 'abcdefgehijklmnopqrstuvwxyz'
-# cs_upper = 'ABCDEFGEHIJKLMNOPQRSTUVWXYZ'
-# cs_num = '0123456789'
-# cs_non_zero = '123456789'
-# cs_special = '!$%^&*@#;:?+=_-,.'
-# cs_ext_special = '"£()[]{}~\'/\\<>`|'
-# cs_all_special = cs_special + cs_ext_special
-# cs_alpha = cs_lower + cs_upper
-# cs_alphanumeric = cs_alpha + cs_num
-# cs_hex = cs_num + 'abcdef'
-# cs_upper_hex = cs_num + 'ABCDEF'
-# cs_bin = '01'
-# cs_basic = cs_alphanumeric + cs_special
-# cs_ext = cs_basic + cs_ext_special
-#
-# char_classes = {
-#     'l': cs_lower,
-#     'u': cs_upper,
-#     'n': cs_num,
-#     'N': cs_non_zero,
-#     's': cs_special,
-#     'x': cs_ext_special,
-#     'S': cs_all_special,
-#     'a': cs_alpha,
-#     'A': cs_alphanumeric,
-#     'h': cs_hex,
-#     'H': cs_upper_hex,
-#     'b': cs_bin,
-#     'c': cs_basic,
-#     'C': cs_ext
-# }
+from generator.paths import data_path
 
 
 def _generate_char(ch, config):
@@ -100,7 +68,7 @@ def _weighted_random(d):
 
 
 def _load_ngrams(file_name):
-    path = os.path.join(os.path.dirname(__file__), data_path)
+    path = os.path.join(os.path.dirname(__file__), data_path())
     path = os.path.join(path, file_name)
     d = {}
     with open(path, 'r') as f:
