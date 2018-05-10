@@ -31,8 +31,9 @@ class CLITest(TestCase):
         result = mock_stdout.getvalue().strip()
         self.assertEqual(len(result), 3)
 
+    @patch("pyperclip.copy")
     @patch("sys.stdout", new_callable=StringIO)
-    def test_gen_copy(self, mock_stdout):
+    def test_gen_copy(self, mock_stdout, _):
         args = self.parser.parse_args(["-c", "-p", "xxx"])
         gen(args)
         result = mock_stdout.getvalue().strip()
