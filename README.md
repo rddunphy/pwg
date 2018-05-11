@@ -46,7 +46,7 @@ The number of words and grammar of the phrase can be specified with the `-p`/`--
 
 ```console
 user:~ $ pwg phrase -p anvaan
-
+SoleDepositsAggravateImpiousNightmarishBundle
 ```
 
 **Warning:** Short passphrases may be vulnerable to dictionary attacks. Passwords generated from dictionary words should 
@@ -162,10 +162,10 @@ Type mypattern deleted.
 
 ## Pronounceable passwords and passphrases
 
-Pronounceable passwords are lower case passwords generated using common character n-grams from the English language. 
+Pronounceable passwords are lower-case passwords generated using common character n-grams from the English language. 
 The n-grams are taken from [tables created by Peter Norvig](http://norvig.com/mayzner.html), and can be found in `data/ngrams`.
 
-Passphrases are sequences of words generated randomly from a dictionary based on the 
+Passphrases are title-case sequences of words generated randomly from a dictionary based on the 
 [Brown corpus](https://www.nltk.org/book/ch02.html#brown-corpus), stored in `data/words`. Patterns can be specified using the
 `-p`/`--pattern` option, where the pattern is an ordered sequence of word types, chosen from `n` (noun), `v` (verb), `a` 
 (adjective), or `w` (any word). The default pattern of `nvan` results in around 6\*10^16 possible phrases (~55 bits of entropy).
