@@ -14,16 +14,7 @@ def confirm(message):
     return inp.lower() not in ['n', 'no']
 
 
-def gen(args):
-    config = load_config()
-    if args.pattern:
-        password = generate(config, args.pattern)
-    elif args.type == "pronounceable":
-        password = generate_pronounceable(args.length)
-    elif args.type == "phrase":
-        password = generate_phrase()
-    else:
-        password = generate_from_type(config, args.type)
+def process_password(args, config, password):
     if args.munge:
         password = substitute(password, config)
     if args.copy:
@@ -31,6 +22,25 @@ def gen(args):
         print("Password copied to clipboard.")
     else:
         print(password)
+
+
+def gen(args):
+    config = load_config()
+    if args.pattern:
+        password = generate(config, args.pattern)
+    else:
+        password = generate_from_type(config, args.type)
+    process_password(args, config, password)
+
+
+def phrase(args):
+    password = generate_phrase(args.pattern)
+    process_password(args, load_config(), password)
+
+
+def pronounceable(args):
+    password = generate_pronounceable(args.length)
+    process_password(args, load_config(), password)
 
 
 def save(args):
@@ -116,11 +126,6 @@ def create_parser():
         help="named type of password to generate"
     )
     parser.add_argument(
-        '-l', '--length',
-        type=int, default=14,
-        help="length of variable-length types"
-    )
-    parser.add_argument(
         '-m', '--munge',
         action='store_true',
         help="munge generated password"
@@ -185,6 +190,48 @@ def create_parser():
         'string', type=str, help="password to munge"
     )
     munge_parser.set_defaults(func=munge)
+
+    pronounceable_parser = subparsers.add_parser(
+        'pronounceable', help="generate pronounceable passwords",
+        description="Generate pronounceable passwords."
+    )
+    pronounceable_parser.add_argument(
+        '-l', '--length',
+        type=int, default=14,
+        help="length of password"
+    )
+    pronounceable_parser.add_argument(
+        '-c', '--copy',
+        action='store_true',
+        help="copy password to clipboard and don\'t display"
+    )
+    pronounceable_parser.add_argument(
+        '-m', '--munge',
+        action='store_true',
+        help="munge generated password"
+    )
+    pronounceable_parser.set_defaults(func=pronounceable)
+
+    phrase_parser = subparsers.add_parser(
+        'phrase', help="generate passphrase",
+        description="Generate passphrase."
+    )
+    phrase_parser.add_argument(
+        '-p', '--pattern',
+        type=str, default="nvan",
+        help="length of password"
+    )
+    phrase_parser.add_argument(
+        '-c', '--copy',
+        action='store_true',
+        help="copy password to clipboard and don\'t display"
+    )
+    phrase_parser.add_argument(
+        '-m', '--munge',
+        action='store_true',
+        help="munge generated password"
+    )
+    phrase_parser.set_defaults(func=phrase)
 
     return parser
 

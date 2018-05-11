@@ -1,5 +1,4 @@
 import random
-
 import re
 from enum import Enum
 
@@ -59,7 +58,7 @@ def _choose_word(d, word_type):
     return random.choice(d[word_type]).title()
 
 
-def generate_phrase(pattern="nvan"):
+def generate_phrase(pattern):
     d = load_dictionary()
     pattern = pattern.lower()
     phrase = ""

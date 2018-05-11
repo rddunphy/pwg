@@ -35,10 +35,27 @@ user:~ $ pwg -t pin
 0148
 ```
 
-To generate a pronounceable password, specify `pronounceable` as a the type:
+To generate a passphrase, use the `phrase` command:
 
 ```console
-user:~ $ pwg -t pronounceable
+user:~ $ pwg phrase
+PastesRepaidSoftspokenComputers
+```
+
+The number of words and grammar of the phrase can be specified with the `-p`/`--pattern` option:
+
+```console
+user:~ $ pwg phrase -p anvaan
+
+```
+
+**Warning:** Short passphrases may be vulnerable to dictionary attacks. Passwords generated from dictionary words should 
+be longer than passwords based on random characters to achieve equal security.
+
+To generate a pronounceable password, use the `pronounceable` command:
+
+```console
+user:~ $ pwg pronounceable
 explawneventry
 ```
 
@@ -46,7 +63,7 @@ The default length of a pronounceable password is 14 characters, and the length 
 option:
 
 ```console
-user:~ $ pwg -t pronounceable -l 12
+user:~ $ pwg pronounceable -l 12
 offingundese
 ```
 
@@ -71,7 +88,7 @@ mYPaS$w0rD
 Passwords generated using pwg can be munged using the `-m`/`--munge` option:
 
 ```console
-user:~ $ pwg -m -t pronounceable
+user:~ $ pwg pronounceable -m
 is$3Dge6EdSOUR
 ```
 
@@ -123,13 +140,6 @@ A number of predefined types are stored in a config file. These types are:
  - secure (`lunsxC{15}` - e.g., `1a#Y[9&£#fAZ<N<U3e6$`)
  - pin (`n{4}` - e.g., `4406`)
  - colour (`h{6}` - e.g., `03be72`)
- - pronounceable
-
-### Pronounceable passwords
-
-Pronounceable passwords are lower case passwords generated using common character n-grams from the English language. 
-The n-grams are taken from [tables created by Peter Norvig](http://norvig.com/mayzner.html), and can be found in the `data` 
-directory.
 
 ### Custom types
 
@@ -149,6 +159,16 @@ user:~ $ pwg save mypattern
 Delete type with name mypattern? (Y/n) y
 Type mypattern deleted.
 ```
+
+## Pronounceable passwords and passphrases
+
+Pronounceable passwords are lower case passwords generated using common character n-grams from the English language. 
+The n-grams are taken from [tables created by Peter Norvig](http://norvig.com/mayzner.html), and can be found in `data/ngrams`.
+
+Passphrases are sequences of words generated randomly from a dictionary based on the 
+[Brown corpus](https://www.nltk.org/book/ch02.html#brown-corpus), stored in `data/words`. Patterns can be specified using the
+`-p`/`--pattern` option, where the pattern is an ordered sequence of word types, chosen from `n` (noun), `v` (verb), `a` 
+(adjective), or `w` (any word). The default pattern of `nvan` results in around 6\*10^16 possible phrases (~55 bits of entropy).
 
 ## Customised character classes
 
