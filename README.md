@@ -2,7 +2,8 @@
 
 [![Build Status](https://travis-ci.com/rddunphy/pwg.svg?branch=master)](https://travis-ci.com/rddunphy/pwg)
 
-pwg is a customisable command line tool for generating various types of randomised passwords, including pronounceable passwords.
+pwg is a customisable command line tool for generating various types of randomised passwords, including pronounceable passwords
+and passphrases.
 
 ## Installation
 
@@ -18,7 +19,7 @@ To create a password using the default pattern (12-14 characters), run:
 
 ```console
 user:~ $ pwg
--R@@u8U#;o
+I*UfssBbO5E6
 ```
 
 This prints the generated password to std out. To copy the password to the clipboard instead, use the `-c`/`--copy` option:
@@ -101,20 +102,20 @@ to generate a password.
 
 The available character classes are:
 
- - `l`: lower case (`a-z`)
- - `u`: upper case (`A-Z`)
+ - `l`: lower-case character (`a-z`)
+ - `u`: upper-case character (`A-Z`)
  - `n`: numeral (`0-9`)
  - `N`: numeral without 0 (`1-9`)
- - `s`: basic special (`!$%^&*@#;:?+=_-,.`)
- - `x`: extended special (``"£()[]{}~'/\<>`|``)
- - `S`: any special (``!$%^&*@#;:?+=_-,."£()[]{}~'/\<>`|``)
- - `a`: alphabetic (`a-zA-Z`)
- - `A`: alphanumeric (`a-zA-Z0-9`)
- - `h`: hexadecimal (`0-9a-f`)
- - `H`: upper case hexadecimal (`0-9A-F`)
- - `b`: binary (`01`)
- - `c`: alphanumeric or basic special character
- - `C`: any character
+ - `s`: basic special character (`!$%^&*@#;:?+=_-,.`)
+ - `x`: extended special character (``"£()[]{}~'/\<>`|``)
+ - `h`: hexadecimal digit (`0-9a-f`)
+ - `H`: upper-case hexadecimal digit (`0-9A-F`)
+ - `b`: binary digit (`01`)
+ - `a`: alphabetic character (`l` or `u`)
+ - `A`: alphanumeric character (`a` or `n`)
+ - `S`: any special character (`s` or `x`)
+ - `c`: alphanumeric or basic special character (`A` or `s`)
+ - `C`: any character (`A` or `S`)
  
 ### Repeated and optional character classes
 
