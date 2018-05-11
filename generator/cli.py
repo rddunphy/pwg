@@ -219,7 +219,8 @@ def create_parser():
     phrase_parser.add_argument(
         '-p', '--pattern',
         type=str, default="nvan",
-        help="length of password"
+        help="sequence of word types (default 'nvan'): 'n' = noun, 'a' = adjective, "
+             "'v' = verb, 'w' = any word"
     )
     phrase_parser.add_argument(
         '-c', '--copy',
