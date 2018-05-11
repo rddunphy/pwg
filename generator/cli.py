@@ -4,13 +4,14 @@ import argparse
 
 from generator.config import load_config, save_config, reset_config
 from generator.generator import generate, generate_from_type, generate_pronounceable
+from generator.phrases import generate_phrase
 from generator.substitutor import substitute
 
 
 def confirm(message):
     inp = input(message + " (Y/n) ")
     inp = inp.strip()
-    return inp != 'n' and inp != 'N'
+    return inp.lower() not in ['n', 'no']
 
 
 def gen(args):
@@ -19,6 +20,8 @@ def gen(args):
         password = generate(config, args.pattern)
     elif args.type == "pronounceable":
         password = generate_pronounceable(args.length)
+    elif args.type == "phrase":
+        password = generate_phrase()
     else:
         password = generate_from_type(config, args.type)
     if args.munge:

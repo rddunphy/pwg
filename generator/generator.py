@@ -4,7 +4,7 @@ import os
 import random
 import re
 
-from generator.paths import data_path
+from generator.paths import ngrams_dir_path
 
 
 def _generate_char(ch, config):
@@ -68,7 +68,7 @@ def _weighted_random(d):
 
 
 def _load_ngrams(file_name):
-    path = os.path.join(os.path.dirname(__file__), data_path())
+    path = os.path.join(os.path.dirname(__file__), ngrams_dir_path())
     path = os.path.join(path, file_name)
     d = {}
     with open(path, 'r') as f:
