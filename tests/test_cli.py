@@ -2,7 +2,7 @@ from io import StringIO
 from unittest import TestCase
 from unittest.mock import patch
 
-from generator.cli import create_parser, gen, confirm, munge, reset, add_chars, remove_chars, save
+from generator.cli import create_parser, gen, confirm, munge, reset, add_chars, remove_chars, save, pronounceable
 
 
 class CLITest(TestCase):
@@ -40,9 +40,9 @@ class CLITest(TestCase):
         self.assertEqual(result, "Password copied to clipboard.")
 
     @patch("sys.stdout", new_callable=StringIO)
-    def test_gen_pronounceable(self, mock_stdout):
-        args = self.parser.parse_args(["-t", "pronounceable", "-l", "8"])
-        gen(args)
+    def test_pronounceable(self, mock_stdout):
+        args = self.parser.parse_args(["pronounceable", "-l", "8"])
+        pronounceable(args)
         result = mock_stdout.getvalue().strip()
         self.assertEqual(len(result), 8)
 
@@ -58,25 +58,22 @@ class ParserTest(TestCase):
         self.assertFalse(args.copy)
         self.assertIsNone(args.pattern)
         self.assertEqual(args.type, 'default')
-        self.assertEqual(args.length, 14)
         self.assertFalse(args.munge)
 
     def test_pattern_args(self):
-        args = self.parser.parse_args(["-c", "-l", "10", "-p", "xxx"])
+        args = self.parser.parse_args(["-c", "-p", "xxx"])
         self.assertEqual(args.func, gen)
         self.assertTrue(args.copy)
         self.assertEqual(args.pattern, "xxx")
         self.assertEqual(args.type, 'default')
-        self.assertEqual(args.length, 10)
         self.assertFalse(args.munge)
 
     def test_type_args(self):
-        args = self.parser.parse_args(["-m", "-t", "pronounceable"])
+        args = self.parser.parse_args(["-m", "-t", "pin"])
         self.assertEqual(args.func, gen)
         self.assertFalse(args.copy)
         self.assertIsNone(args.pattern)
-        self.assertEqual(args.type, 'pronounceable')
-        self.assertEqual(args.length, 14)
+        self.assertEqual(args.type, 'pin')
         self.assertTrue(args.munge)
 
     def test_munge(self):
