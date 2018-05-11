@@ -2,7 +2,8 @@ from io import StringIO
 from unittest import TestCase
 from unittest.mock import patch
 
-from generator.cli import create_parser, gen, confirm, munge, reset, add_chars, remove_chars, save, pronounceable
+from generator.cli import create_parser, gen, confirm, munge, reset, add_chars, remove_chars, save, pronounceable, \
+    phrase
 
 
 class CLITest(TestCase):
@@ -46,6 +47,14 @@ class CLITest(TestCase):
         result = mock_stdout.getvalue().strip()
         self.assertEqual(len(result), 8)
 
+    @patch("sys.stdout", new_callable=StringIO)
+    def test_phrase(self, mock_stdout):
+        args = self.parser.parse_args(["phrase", "-p", "wwavn"])
+        phrase(args)
+        result = mock_stdout.getvalue().strip()
+        upper_count = sum(1 for c in result if c.isupper())
+        self.assertEqual(upper_count, 5)
+
 
 class ParserTest(TestCase):
 
@@ -74,6 +83,20 @@ class ParserTest(TestCase):
         self.assertFalse(args.copy)
         self.assertIsNone(args.pattern)
         self.assertEqual(args.type, 'pin')
+        self.assertTrue(args.munge)
+
+    def test_pronounceable_args(self):
+        args = self.parser.parse_args(["pronounceable", "-m", "-c", "-l", "15"])
+        self.assertEqual(args.func, pronounceable)
+        self.assertTrue(args.copy)
+        self.assertEqual(args.length, 15)
+        self.assertTrue(args.munge)
+
+    def test_phrase_args(self):
+        args = self.parser.parse_args(["phrase", "-m", "-c", "-p", "nn"])
+        self.assertEqual(args.func, phrase)
+        self.assertTrue(args.copy)
+        self.assertEqual(args.pattern, "nn")
         self.assertTrue(args.munge)
 
     def test_munge(self):
