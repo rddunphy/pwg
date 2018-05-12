@@ -18,5 +18,7 @@
 
   parts:
     pwg:
-      plugin: autotools
+      plugin: python
+      python-version: python3
+      requirements: requirements.txt
       source: https://github.com/rddunphy/pwg/archive/v0.1.0.tar.gz
